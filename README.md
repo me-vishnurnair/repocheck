@@ -2,7 +2,11 @@
 
 A defensive repository hygiene checker with a reusable Python engine, local CLI and HTTP API.
 
-**Status:** implemented and checked locally. Public publication is approved; GitHub upload and deployment are blocked on account access. **Live demo:** not deployed; no URL claimed.
+**Status:** local implementation verified. **Live demo:** deployment pending.
+
+[Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
+
+![Desktop preview](docs/screenshot-desktop.png)
 
 ## Features
 
@@ -12,6 +16,19 @@ A defensive repository hygiene checker with a reusable Python engine, local CLI 
 - See severity, rule ID, path, line and remediation, with matched source values omitted.
 - Export JSON and use CLI exit codes in continuous integration.
 - No repository fetching, code execution, archive extraction or saved server-side source files.
+
+## Engineering decisions
+
+One scanning engine, two entry points.
+
+| Decision | Reason |
+| --- | --- |
+| Shared rules | The CLI and HTTP API use the same scanner so rule behavior can be maintained in one place. |
+| Bounded ZIP inspection | Entry counts, paths, file sizes and compression ratios are checked without extracting or executing source. |
+| Reports omit matched values | Findings identify the rule, severity, location and suggested fix without repeating possible secret values. |
+| Explicit heuristic limits | Pattern matches can produce false positives and miss real issues; they are review prompts, not security certification. |
+
+**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). Hosted CI and deployment checks are still pending.
 
 ## Tech stack
 
@@ -38,7 +55,7 @@ Open **http://127.0.0.1:8000**. Interactive API documentation is at **/docs**, a
 .venv\Scripts\python -m pytest -q
 ```
 
-GitHub Actions runs these tests on pushes and pull requests. Direct dependencies are pinned to the versions tested for this release.
+The included GitHub Actions workflow is configured to run these tests on pushes and pull requests; a hosted run has not yet been verified. Direct dependencies are pinned to the versions tested for this release.
 
 ## Deploy
 
@@ -65,12 +82,6 @@ The CLI uses only Python's standard library; API packages are unnecessary for CL
 Maximum archive size: 2 MB. Up to 400 archive entries, 150 KB per supported file, 6 MB total inspected uncompressed data, and a 100:1 compression ratio ceiling. Paths, duplicate names, symlinks and unsupported formats are checked. Git metadata, dependencies and build directories are ignored. There is no archive extraction. Source is not deliberately persisted by the API; prefer the local CLI for confidential repositories.
 
 This is a heuristic checker, not a complete secret detector, vulnerability scanner or security certification. Regex findings can flag safe test fixtures and miss real problems. Review them in context. The `.gitignore` check is intentionally simple and does not fully evaluate Git's pattern rules. Reports omit snippets and matched values but include paths, which can themselves be sensitive.
-
-## Screenshots
-
-![Desktop application](docs/screenshot-desktop.png)
-
-[Mobile screenshot](docs/screenshot-mobile.png)
 
 ## Understand the code
 
