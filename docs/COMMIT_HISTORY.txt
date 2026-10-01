@@ -1,0 +1,5 @@
+3413d40 chore: initialize project license and safe configuration
+8fe84ba feat: implement bounded scanner CLI and API
+1e31afe feat: add responsive interactive application interface
+bceff77 test: cover boundary cases and add deployment configuration
+d46fc8d docs: explain architecture and interview trade-offs; record verified release
