@@ -2,7 +2,9 @@
 
 A defensive repository hygiene checker with a reusable Python engine, local CLI and HTTP API.
 
-**Source:** published on GitHub. **Live demo:** deployment pending.
+**[Try the live demo ↗](https://vishnu-repocheck.onrender.com)** · [Portfolio](https://vishnu-portfolio-1ijm.onrender.com)
+
+Free hosting may take about a minute to wake up on the first visit.
 
 [Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
 
@@ -30,7 +32,7 @@ One scanning engine, two entry points.
 | Reports omit matched values | Findings identify the rule, severity, location and suggested fix without repeating possible secret values. |
 | Explicit heuristic limits | Pattern matches can produce false positives and miss real issues; they are review prompts, not security certification. |
 
-**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. Live deployment checks are still pending.
+**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. Live checks passed on 1 October 2026: sample reports, json and zip scanning, reports that omit matched source, unsafe-path rejection and malformed-zip rejection. [Verification run](https://github.com/me-vishnurnair/portfolio/actions/runs/36832848807).
 
 ## Tech stack
 
@@ -61,7 +63,11 @@ The included GitHub Actions workflow is configured to run these tests on pushes 
 
 ## Deploy
 
-`render.yaml` describes a Render Python web service with one worker. Connect this GitHub repository and review the service settings before creating it. The manifest requests the free web-service plan and does not create paid resources. Availability and provider terms should be checked at deployment time. Deployment has not been performed.
+Deployed at **https://vishnu-repocheck.onrender.com** on a free Render Python service in Singapore, with one Uvicorn worker and HTTPS. The build installs `requirements.txt`; the start command is `uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1`.
+
+This deployment was created from a public Git URL. Automatic source deployments require a connected Git provider; until that is configured, use **Manual Deploy → Deploy latest commit** after CI passes. Do not issue a duplicate manual deploy if an automatic one is already running. The included `render.yaml` is a configuration template, not an active Blueprint for this service.
+
+Free services sleep after 15 idle minutes and share a monthly runtime allowance. [Hosting status and recovery](https://github.com/me-vishnurnair/portfolio/blob/main/docs/DEPLOYMENT.md) · [Render free-plan limits](https://render.com/docs/free).
 
 Alternatively, build the included Dockerfile and run the container with the required environment variables. Production traffic should be served over HTTPS.
 
