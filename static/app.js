@@ -1,6 +1,56 @@
-import {el,$,api,notify,busy,download} from './lib.js';
-let report=null;
-function render(){if(!report)return;for(const id of ['high','medium','low'])$('#'+id).textContent=report.counts[id];$('#files').textContent=report.files_scanned;const f=$('#severity-filter').value;const findings=report.findings.filter(x=>!f||x.severity===f);$('#scan-meta').textContent=`${report.findings.length} findings · ${report.files_skipped||0} unsupported or ignored files skipped${report.truncated?' · Report truncated at 1,000 findings':''}`;$('#findings').replaceChildren(...(findings.length?findings.map(r=>el('article',{class:'finding'},el('span',{class:'severity '+r.severity},r.severity),el('div',{},el('h3',{},r.message),el('code',{},`${r.rule} · ${r.path}${r.line?':'+r.line:''}`),el('p',{},r.remediation)))):[el('div',{class:'empty'},report.findings.length?'No findings at this priority.':'No patterns flagged. Review manually; this is not a security guarantee.')]));$('#export-button').disabled=false;}
-$('#sample-button').onclick=()=>busy($('#sample-button'),async()=>{report=await api('/api/sample');render();notify('Sample report ready. The sample intentionally contains weak patterns.');});
-$('#zip-input').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{e.target.disabled=true;if(file.size>2000000)throw Error('Choose a ZIP smaller than 2 MB.');notify('Inspecting archive…');report=await api('/api/scan-zip',{method:'POST',headers:{'Content-Type':'application/zip'},body:file});render();notify('Review complete.');}catch(err){notify(err.message);}finally{e.target.disabled=false;e.target.value='';}};
-$('#severity-filter').onchange=render;$('#export-button').onclick=()=>report&&download('repocheck-report.json',JSON.stringify(report,null,2));
+import {
+  el,
+  $,
+  api,
+  notify,
+  busy,
+  download
+} from './lib.js';
+let report = null;
+
+function render() {
+  if (!report) return;
+  for (const id of ['high', 'medium', 'low']) $('#' + id).textContent = report.counts[id];
+  $('#files').textContent = report.files_scanned;
+  const f = $('#severity-filter').value;
+  const findings = report.findings.filter(x => !f || x.severity === f);
+  $('#scan-meta').textContent = `${report.findings.length} findings · ${report.files_skipped||0} unsupported or ignored files skipped${report.truncated?' · Report truncated at 1,000 findings':''}`;
+  $('#findings').replaceChildren(...(findings.length ? findings.map(r => el('article', {
+    class: 'finding'
+  }, el('span', {
+    class: 'severity ' + r.severity
+  }, r.severity), el('div', {}, el('h3', {}, r.message), el('code', {}, `${r.rule} · ${r.path}${r.line?':'+r.line:''}`), el('p', {}, r.remediation)))) : [el('div', {
+    class: 'empty'
+  }, report.findings.length ? 'No findings at this priority.' : 'No patterns flagged. Review manually; this is not a security guarantee.')]));
+  $('#export-button').disabled = false;
+}
+$('#sample-button').onclick = () => busy($('#sample-button'), async () => {
+  report = await api('/api/sample');
+  render();
+  notify('Sample report ready. The sample intentionally contains weak patterns.');
+});
+$('#zip-input').onchange = async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    e.target.disabled = true;
+    if (file.size > 2000000) throw Error('Choose a ZIP smaller than 2 MB.');
+    notify('Inspecting archive…');
+    report = await api('/api/scan-zip', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/zip'
+      },
+      body: file
+    });
+    render();
+    notify('Review complete.');
+  } catch (err) {
+    notify(err.message);
+  } finally {
+    e.target.disabled = false;
+    e.target.value = '';
+  }
+};
+$('#severity-filter').onchange = render;
+$('#export-button').onclick = () => report && download('repocheck-report.json', JSON.stringify(report, null, 2));
