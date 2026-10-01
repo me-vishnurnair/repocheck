@@ -2,11 +2,13 @@
 
 A defensive repository hygiene checker with a reusable Python engine, local CLI and HTTP API.
 
-**Status:** local implementation verified. **Live demo:** deployment pending.
+**Source:** published on GitHub. **Live demo:** deployment pending.
 
 [Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
 
 ![Desktop preview](docs/screenshot-desktop.png)
+
+[![Python tests](https://github.com/me-vishnurnair/repocheck/actions/workflows/tests.yml/badge.svg)](https://github.com/me-vishnurnair/repocheck/actions/workflows/tests.yml)
 
 ## Features
 
@@ -28,7 +30,7 @@ One scanning engine, two entry points.
 | Reports omit matched values | Findings identify the rule, severity, location and suggested fix without repeating possible secret values. |
 | Explicit heuristic limits | Pattern matches can produce false positives and miss real issues; they are review prompts, not security certification. |
 
-**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). Hosted CI and deployment checks are still pending.
+**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. Live deployment checks are still pending.
 
 ## Tech stack
 
@@ -55,11 +57,11 @@ Open **http://127.0.0.1:8000**. Interactive API documentation is at **/docs**, a
 .venv\Scripts\python -m pytest -q
 ```
 
-The included GitHub Actions workflow is configured to run these tests on pushes and pull requests; a hosted run has not yet been verified. Direct dependencies are pinned to the versions tested for this release.
+The included GitHub Actions workflow is configured to run these tests on pushes and pull requests; the published code passed its first hosted run. Direct dependencies are pinned to the versions tested for this release.
 
 ## Deploy
 
-`render.yaml` describes a Render Python web service with one worker. Connect the eventual GitHub repository and review the service settings before creating it. The manifest requests the free web-service plan and does not create paid resources. Availability and provider terms should be checked at deployment time. Deployment has not been performed.
+`render.yaml` describes a Render Python web service with one worker. Connect this GitHub repository and review the service settings before creating it. The manifest requests the free web-service plan and does not create paid resources. Availability and provider terms should be checked at deployment time. Deployment has not been performed.
 
 Alternatively, build the included Dockerfile and run the container with the required environment variables. Production traffic should be served over HTTPS.
 
