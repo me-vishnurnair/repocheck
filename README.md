@@ -6,9 +6,9 @@ A defensive repository hygiene checker with a reusable Python engine, local CLI 
 
 Free hosting may take about a minute to wake up on the first visit.
 
-[Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
+[Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/images/screenshot-mobile.png)
 
-![Desktop preview](docs/screenshot-desktop.png)
+![Desktop preview](docs/images/screenshot-desktop.png)
 
 [![Python tests](https://github.com/me-vishnurnair/repocheck/actions/workflows/tests.yml/badge.svg)](https://github.com/me-vishnurnair/repocheck/actions/workflows/tests.yml)
 
@@ -32,7 +32,7 @@ One scanning engine, two entry points.
 | Reports omit matched values | Findings identify the rule, severity, location and suggested fix without repeating possible secret values. |
 | Explicit heuristic limits | Pattern matches can produce false positives and miss real issues; they are review prompts, not security certification. |
 
-**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. Live checks passed on 1 October 2026: sample reports, json and zip scanning, reports that omit matched source, unsafe-path rejection and malformed-zip rejection. [Verification run](https://github.com/me-vishnurnair/portfolio/actions/runs/36832848807).
+**Recorded local verification:** 5 passing backend tests, plus browser and mobile checks. [Test output](docs/verification/test-results.txt). GitHub Actions passed on the published code. Live checks passed on 1 October 2026: sample reports, json and zip scanning, reports that omit matched source, unsafe-path rejection and malformed-zip rejection. [Verification run](https://github.com/me-vishnurnair/portfolio/actions/runs/36832848807).
 
 ## Tech stack
 
@@ -91,10 +91,22 @@ Maximum archive size: 2 MB. Up to 400 archive entries, 150 KB per supported file
 
 This is a heuristic checker, not a complete secret detector, vulnerability scanner or security certification. Regex findings can flag safe test fixtures and miss real problems. Review them in context. The `.gitignore` check is intentionally simple and does not fully evaluate Git's pattern rules. Reports omit snippets and matched values but include paths, which can themselves be sensitive.
 
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| `app/` | Python application and core logic |
+| `static/` | Browser interface |
+| `tests/` | Automated behavior checks |
+| `docs/` | Architecture, screenshots and dated verification |
+| `.github/workflows/` | CI workflows |
+
+[Documentation index](docs/README.md)
+
 ## Understand the code
 
 Read [docs/EXPLAINED.md](docs/EXPLAINED.md) for the request flow, technology choices, limitations and ten interview questions with answers.
 
 ## Attribution and license
 
-Original application code created for Vishnu R. Nair with AI assistance. Third-party libraries retain their licenses. The project is an AI-assisted learning build; the owner is working through the implementation. MIT license; see [LICENSE](LICENSE).
+By Vishnu R Nair. Built with AI assistance as a learning project. MIT licensed; see [LICENSE](LICENSE). Third-party libraries retain their own licenses.
